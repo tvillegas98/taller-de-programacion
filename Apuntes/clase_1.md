@@ -456,6 +456,9 @@ de la manera esperaeda
     }
 ```
 
+## Repositorio de clases practicas
+ - [link](https://github.com/taller-1-fiuba-rust/clases_practicas/tree/main)
+
 - Test de integracion
     - Se colocan en el directorio tests/, al lado de src/
     - se compila cada archivo como un crate seperado. Debemos incluir como crate nuestro codigo
@@ -468,3 +471,9 @@ de la manera esperaeda
 - Rust no tiene excepciones, a diferencia de Python o Java. No existe el burbujeo de excepciones.
 - unwrap y expect unicamente son usables en test. (En la cursada)
 - &str y String no son lo mismo.
+- Se recomienda crear un archivo por estructura.
+- Tambien que los tests Unitarios esten en el mismo archivo de la estructura
+- Los tests de integracion, que esten en un archivo aparte
+- cfg es una flag de compilacion, es decir, que solo compilas cosas en casos particulares
+- Rust posee chequeos de exhaustividad en los match, es decir, que se deben de cubrir todos los casos o al menos
+que haya un wildcard que cubra todos los otros.
