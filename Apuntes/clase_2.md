@@ -53,3 +53,19 @@ Las referencias en rust nunca son nulas.
     No existe un valor por defecto inicial para una referencia
     Rust no convierte enteros en referencias
     Para indicar la ausencia de un valor, se usa Option<T>
+
+
+
+Rust intenta asignar a cada tipo de referencia en un programa un lifetime que satisface las restricciones impuestas
+por como se usa.
+
+Un life es un tramo, un area del programa para el cual esa referencia se puede usar de manera segura.
+
+
+
+Traits son la version de Rust de interfaces o clases base abstractas
+
+Agregar un trait a un tipo no cuesta memoria
+
+Genericidad y traits son relacionados.
+
