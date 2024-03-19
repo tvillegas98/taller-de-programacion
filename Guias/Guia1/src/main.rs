@@ -81,6 +81,5 @@ fn main() {
         Err(GameError::FileCouldNotBeRead) => {
             println!("¡Hubo un error al leer el archivo de palabras!")
         }
-        _ => (),
     }
 }
