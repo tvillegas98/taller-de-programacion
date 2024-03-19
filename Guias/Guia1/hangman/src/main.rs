@@ -5,12 +5,11 @@ use std::{fs::read_to_string, io, vec};
 mod hangman;
 
 const DEFAULT_TRIES: u64 = 10;
+const PATH: &str = "words.txt";
 
 pub enum GameError {
     FileCouldNotBeRead,
 }
-
-const PATH: &str = "words.txt";
 
 fn read_letter() -> String {
     println!("Ingresa una letra: ");
