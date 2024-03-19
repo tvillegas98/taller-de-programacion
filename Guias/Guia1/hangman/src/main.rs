@@ -62,6 +62,7 @@ fn start_game(word: &str) {
                 println!("Has agotado la cantidad de intentos")
             }
         }
+        println!("{}", hangman_game);
     }
 
     match hangman_game.game_state() {

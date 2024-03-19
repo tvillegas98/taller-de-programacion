@@ -1,4 +1,5 @@
-use std::collections::{HashMap, HashSet};
+use core::fmt;
+use std::collections::HashSet;
 
 #[derive(Debug, Clone, Copy)]
 pub enum HangManGameState {
@@ -9,8 +10,9 @@ pub enum HangManGameState {
 
 #[derive(Debug, Clone)]
 pub struct HangMan {
+    word: String,
     game_state: HangManGameState,
-    letters_to_guess: HashMap<String, u16>,
+    letters_to_guess: HashSet<String>,
     guessed_letters: HashSet<String>,
     tries: u64,
 }
@@ -18,7 +20,7 @@ pub struct HangMan {
 pub enum HangManError {
     LetterNotFound,
     LetterAlreadyGuessed,
-    OutOfTries
+    OutOfTries,
 }
 
 pub enum HangManEvent {
@@ -27,17 +29,14 @@ pub enum HangManEvent {
 
 impl HangMan {
     pub fn new(word: &str, tries: u64) -> HangMan {
-        let mut letters_to_guess: HashMap<String, u16> = HashMap::new();
+        let mut letters_to_guess: HashSet<String> = HashSet::new();
 
         word.chars().for_each(|letter| {
-            let letter: String = letter.to_string();
-            match letters_to_guess.get(&letter) {
-                Some(ocurrences) => letters_to_guess.insert(letter, ocurrences + 1),
-                None => letters_to_guess.insert(letter, 1),
-            };
+            letters_to_guess.insert(letter.to_string());
         });
 
         HangMan {
+            word: word.to_owned(),
             game_state: HangManGameState::OnGoing,
             guessed_letters: HashSet::new(),
             letters_to_guess,
@@ -56,19 +55,19 @@ impl HangMan {
     pub fn play_turn(&mut self, letter: &String) -> Result<HangManEvent, HangManError> {
         if self.out_of_tries() {
             self.game_state = HangManGameState::OutOfTries;
-            return Err(HangManError::OutOfTries)
-        }else {
+            return Err(HangManError::OutOfTries);
+        } else {
             self.tries -= 1;
         }
 
-        if self.letter_already_guessed(letter) || self.letter_without_occurrences_left(letter) {
+        if self.letter_already_guessed(letter) {
             return Err(HangManError::LetterAlreadyGuessed);
-        } else if self.letter_not_in_word(letter) {
+        } else if !self.letter_in_word(letter) {
+            self.guessed_letters.insert(letter.to_owned());
             return Err(HangManError::LetterNotFound);
         }
 
-        let occurrences = self.letters_to_guess[letter] - 1;
-        self.letters_to_guess.insert(letter.to_owned(), occurrences);
+        self.guessed_letters.insert(letter.to_owned());
 
         if self.word_guessed() {
             self.game_state = HangManGameState::WordGuessed;
@@ -81,23 +80,41 @@ impl HangMan {
         self.guessed_letters.contains(letter)
     }
 
-    fn letter_without_occurrences_left(&self, letter: &String) -> bool {
-        if !self.letters_to_guess.contains_key(letter) {
-            return false;
-        }
-        self.letters_to_guess[letter] == 0
-    }
-
-    fn letter_not_in_word(&self, letter: &String) -> bool {
-        !self.letters_to_guess.contains_key(letter)
+    fn letter_in_word(&self, letter: &String) -> bool {
+        self.letters_to_guess.contains(letter)
     }
 
     fn out_of_tries(&self) -> bool {
         self.tries == 0
     }
 
-    fn word_guessed(&self) -> bool{
-        self.letters_to_guess.values().all(|occurrences | occurrences.eq(&0))
+    fn word_guessed(&self) -> bool {
+        self.word
+            .chars()
+            .all(|letter| self.guessed_letters.contains(&letter.to_string()))
     }
+}
 
+impl fmt::Display for HangMan {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut hangman_word_status = String::new();
+        hangman_word_status.push_str("La palabra has el momento es: ");
+
+        for character in self.word.chars() {
+            if self.guessed_letters.contains(&character.to_string()) {
+                hangman_word_status.push(character);
+            } else {
+                hangman_word_status.push('_');
+            }
+        }
+
+        hangman_word_status.push('\n');
+        hangman_word_status.push_str("Letras utilizadas: ");
+
+        for character in &self.guessed_letters {
+            hangman_word_status.push_str(character.as_str())
+        }
+
+        write!(f, "{}", hangman_word_status)
+    }
 }
