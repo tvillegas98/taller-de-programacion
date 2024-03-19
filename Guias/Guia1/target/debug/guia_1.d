@@ -1,0 +1,1 @@
+/Users/tomas/facultad/taller-de-programacion/Guias/Guia1/target/debug/guia_1: /Users/tomas/facultad/taller-de-programacion/Guias/Guia1/src/hangman.rs /Users/tomas/facultad/taller-de-programacion/Guias/Guia1/src/main.rs
